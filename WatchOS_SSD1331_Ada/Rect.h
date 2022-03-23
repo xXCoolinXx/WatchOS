@@ -5,7 +5,7 @@
  *  Author: A cool dude
  */ 
 
-
+#pragma once
 #ifndef RECT_H_
 #define RECT_H_
 
@@ -13,6 +13,8 @@
 #include "Line.h"
 #include "Arduino.h"
 #include "Circle.h"
+#include "Color.h"
+
 //rectangle
 struct Line;
 struct Rect {
@@ -32,4 +34,3 @@ struct Rect {
 
 
 #endif /* RECT_H_ */
-

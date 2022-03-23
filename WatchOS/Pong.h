@@ -1,29 +1,35 @@
-#pragma once
-#include "Game.h"
-#include "Rect.h"
-#include "Circle.h"
-class Pong : public Game{
-	struct User : public Rect {
-    byte score;
-	};
-  Circle ball;
-  User player;
-  User ai;
-  //is the ball going left or right?
-	byte directionx;
-	//is it going up, down, or neither?
-	byte directiony = 1;
-public:
-	Pong();
-	void Up();
-	void Down();
-	void Left();
-	void Right();
-	void Special();
-	void Specialholdoff();
-	void displayAll();
-  //checks collision 
-	void checkCollision(bool rect/*um*/);
-  void Countdown();
-};
+#include "App.h"
+#include "Shapes.h"
 
+#define PAD_WIDTH      2
+#define PAD_HEIGHT    12
+#define SCREEN_WIDTH  96
+#define SCREEN_HEIGHT 64
+#define BALL_SPEED 3  
+#define BALL_DIAMETER 6
+const double pi = 4 * atan(1.0);
+
+class Kernel;
+
+class Pong : public App {
+  RectDouble comp_pad{0, (SCREEN_HEIGHT - PAD_HEIGHT) / 2, PAD_WIDTH, PAD_HEIGHT};
+  RectDouble user_pad{SCREEN_WIDTH - PAD_WIDTH, (SCREEN_HEIGHT - PAD_HEIGHT) / 2, PAD_WIDTH, PAD_HEIGHT};
+  RectDouble ball{0, 0, BALL_DIAMETER, BALL_DIAMETER};
+  
+  const double ball_speed = 1.00;
+  double ball_angle;
+
+  int user_score = 0;
+  int comp_score = 0;
+
+  public:
+    Pong(Kernel* kernel);
+    void run_code(double x, double y, bool special, Kernel* kernel);
+    String get_name();
+    RectDouble user_move(double x, double y, Kernel* kernel);
+    RectDouble comp_move(Kernel* kernel);
+    RectDouble ball_move(Kernel* kernel);
+    void reset_ball();
+    bool check_collisions();
+    
+};

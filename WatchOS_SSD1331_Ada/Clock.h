@@ -1,3 +1,4 @@
+#pragma once
 #include <TimeAlarms.h>
 #include "App.h"
 #include "Events.h"
@@ -24,7 +25,7 @@ class Clock : public App {
     byte menuSetPlace = 0;
     bool Set = false;
     void highlightTimer(byte place);
-    //Wether or not the clock setTime mode is on
+    //Wether or not the clockzsetTime mode is on
     bool set_Time = false;
     //When changing time, the place where it is changing (ie when changing minute, current place is 2)
     byte current_place = 0;
@@ -79,5 +80,3 @@ class Clock : public App {
     void stopwatch();
     tmElements_t tm;
 };
-
-

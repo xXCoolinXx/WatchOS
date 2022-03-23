@@ -1,3 +1,4 @@
+#pragma once
 #if ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -18,7 +19,7 @@ class Game : public App {
   protected:
     bool pause = false;
     //friend class Events;
-    //allows clock to select the current game
+    //allows clockzto select the current game
     friend class Clock;
     //total amount (cannot be dynamic because of RAM)
     const static PROGMEM byte totalGames = 6;
@@ -40,4 +41,3 @@ class Game : public App {
     //select the game from gameSelect and put it in cg
     static void select();
 };
-

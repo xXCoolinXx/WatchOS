@@ -4,7 +4,7 @@
  * Created: 4/30/2017 4:11:53 PM
  *  Author: A cool dude
  */ 
-
+#pragma once
 
 #ifndef PACMAN_H_
 #define PACMAN_H_
@@ -40,4 +40,3 @@ public:
 
 
 #endif /* PACMAN_H_ */
-

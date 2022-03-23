@@ -1,83 +1,70 @@
-#include <TimeAlarms.h>
+#pragma once
 #include "App.h"
-#include "Events.h"
-#include "Rect.h"
-//tells time, is a stopwatch, and allows for the selection of games
-class Clock : public App {
-    bool swOn = false;
-    //Take off the 'r'. It becomes something from Doctor Who
-    bool rewriteTimer = false;
-    byte toggleHold = 0;
-    bool clockFullScreen;
-    struct timerTime{
-      byte Hour = 0;
-      byte Minute = 0;
-      byte Second = 0;
-      byte Hour_activateTime = 0;
-      byte Minute_activateTime = 0;
-      byte Second_activateTime = 0;
-    };
-    timerTime timer;
-    bool timerOn = false;
-    bool ta = false;
-    byte timerAlarm = 0;
-    byte menuSetPlace = 0;
-    bool Set = false;
-    void highlightTimer(byte place);
-    //Wether or not the clock setTime mode is on
-    bool set_Time = false;
-    //When changing time, the place where it is changing (ie when changing minute, current place is 2)
-    byte current_place = 0;
-    //whether or not to start the stopwatch
-    bool startSW = 1;
-    //hold time for setting time
-    //byte specialhold = 0;
-    //current app display
-    byte button = 0;
-    //cursor coords
-    Point Cursor{0,44};
-    //time
-    
-    //last time(for stopwatch)
-    struct stopwatch {
-      byte Second;
-      byte Minute;
-      byte Hour;
-    };
 
-    tmElements_t sw;
-    tmElements_t ltm;
-    //adds to the current place variable
-    void addToCurrentPlace(Direction way);
-    //adds to the currentTime variable
-    void addToCurrentTime(Direction way);
-    //prints 2 digits with a zero prefixing if number isnt in tens
-    void print2(byte number);
-    //changes font based on current place
-    void blinky(byte currentPlace);
-  public:
-    //function for when the special button isnt being pressed
-    void Specialholdoff();
-    //reads time
-    void Read();
-    //writes time
-    void Write();
-    //function for up key
-    void Up();
-    //function for down key
-    void Down();
-    //function for left key
-    void Left();
-    //function for right key
-    void Right();
-    //function for special key
-    void Special();
-    //displays the stuff
-    void displayAll();
-    void Toggle();
-    Clock();
-    void stopwatch();
-    tmElements_t tm;
+#define ROW_SPACE 10
+#define NUM_ROWS 3
+#define CHAR_WIDTH 5
+#define CHAR_SPACE_W 6
+#define CHAR_HEIGHT 7
+#define X_SPACE 10
+
+class Kernel;
+
+enum Selection {
+  STOPWATCH = ROW_SPACE,
+  TIMER = 2 * ROW_SPACE,
+  ALARMS = 3 * ROW_SPACE,
 };
 
+Selection operator++(Selection& s);
+Selection operator--(Selection& s);
 
+enum TimeSelection {
+  NOT_EDITING = 1,
+  HOUR = 40,
+  MINUTE = HOUR + 3 * CHAR_SPACE_W, //=58,
+  SECOND = MINUTE + 3 * CHAR_SPACE_W  //=76,
+};
+
+TimeSelection operator++(TimeSelection& s);
+TimeSelection operator--(TimeSelection& s);
+
+enum AlarmEdit {
+  ID = 1, SET,
+  HOUR_, MINUTE_,
+  SUNDAY = 5, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY=11,
+  NOT
+};
+
+AlarmEdit operator++(AlarmEdit& s);
+AlarmEdit operator--(AlarmEdit& s);
+
+short getX(AlarmEdit a);
+short getY(AlarmEdit a);
+short getWidth(AlarmEdit a);
+
+class Clock : public App {
+  bool just_moved_x = false;
+  bool just_moved_y = false;
+  Selection current_selection = Selection::STOPWATCH;
+
+  void _clearStopwatchArea(Kernel* kernel);
+  void _clearTimerArea(Kernel* kernel);
+  void _clearChars(short x, short y, short num_chars, Kernel* kernel);
+  void _underline(short x, short y, short num_chars, Kernel* kernel, bool clear = true);
+  void _clearAlarmArea(Kernel* kernel);
+  //void _drawDOW(
+
+  TimeSelection edit = TimeSelection::NOT_EDITING;
+  AlarmEdit alarm_edit = NOT;
+
+  int alarm_number = 0;
+  public:
+  Clock(Kernel* kernel);
+
+  void run_code(double x, double y, bool special, Kernel* kernel);
+  void update_selection(double x, double y, Kernel* kernel);
+  String get_name();
+
+  void checkSpecial(double x, double y, bool special, Kernel* kernel);
+};

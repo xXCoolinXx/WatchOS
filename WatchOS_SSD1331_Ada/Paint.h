@@ -1,3 +1,4 @@
+#pragma once
 #include "Game.h"
 
 class Paint : public Game {
@@ -30,5 +31,3 @@ class Paint : public Game {
 	void displayAll();
 	void Specialholdoff();
 };
-
-

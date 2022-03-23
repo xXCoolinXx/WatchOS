@@ -4,6 +4,7 @@
  * Created: 4/30/2017 4:29:31 PM
  *  Author: A cool dude
  */ 
+#pragma once
 #include "Arduino.h"
 
 #ifndef POINTRECT_H_
@@ -22,4 +23,3 @@ struct Point {
 
 
 #endif /* POINTRECT_H_ */
-

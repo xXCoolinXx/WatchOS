@@ -4,7 +4,7 @@
  * Created: 5/2/2017 4:38:20 PM
  *  Author: A cool dude
  */ 
-
+#pragma once
 
 #ifndef LINE_H_
 #define LINE_H_
@@ -23,4 +23,3 @@ struct Line {
 };
 
 #endif /* LINE_H_ */
-

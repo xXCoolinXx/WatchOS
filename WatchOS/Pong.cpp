@@ -1,176 +1,101 @@
 #include "Pong.h"
-extern void print3(byte );
-extern bool lastLeft;
-Pong::Pong() {
+#include "Kernel.h"
 
-  directionx = random(2);
-  player.x = display.width() - 1;
-  player.y = 0;
-  player.w = 1;
-  player.h = 23;
-  player.score = 0;
-  ai.x = 0;
-  ai.y = 0;
-  ai.w = player.w;
-  ai.h = player.h;
-  ai.score = 0;
-  ball.r = 2;
-  Countdown();
+Pong::Pong(Kernel* kernel) : App(kernel) {
+  reset_ball();  
 }
-void Pong::Up() {
-  if (player.y != 0 && !pause) {
-    player.y -= 2;
-  }
-}
-void Pong::Down() {
-  if (player.y + 20 != 64 && !pause) {
-    player.y += 2;
-  }
-}
-void Pong::Left() {
-  if (!lastLeft) {
-    pause = !pause;
-  }
-}
-void Pong::Right() {
 
+String Pong::get_name() {
+  return String("Pong");
 }
-void Pong::Special() {
 
-}
-void Pong::Specialholdoff() {
+void Pong::run_code(double x, double y, bool special, Kernel* kernel) {
+  RectDouble user_last = user_move(x, y, kernel);
+  RectDouble comp_last = comp_move(kernel);
+  RectDouble ball_last = ball_move(kernel);
 
+  kernel->display.fillRect(comp_last.x, comp_last.y, comp_last.width, comp_last.height, BLACK);
+  kernel->display.fillRect(comp_pad .x, comp_pad .y, comp_pad .width, comp_pad .height, WHITE);
+
+  kernel->display.fillRect(user_last.x, user_last.y, user_last.width, user_last.height, BLACK);
+  kernel->display.fillRect(user_pad .x, user_pad .y, user_pad .width, user_pad .height, WHITE);
+
+  kernel->display.fillCircle(ball_last.x, ball_last.y, ball_last.width / 2, BLACK);
+  kernel->display.fillCircle(ball     .x, ball     .y, ball     .width / 2, WHITE);
+
+  kernel->display.fillRect((SCREEN_WIDTH - 2) / 2, 0, 2, SCREEN_HEIGHT, WHITE); //Center line
 }
-void Pong::displayAll() {
-  if (ball.y > ai.y && ai.y != 63) {
-    ai.y += 1;
+
+RectDouble Pong::user_move(double x, double y, Kernel* kernel) {
+  RectDouble last = user_pad;
+  
+  double fps_ratio = 80.00 / kernel->get_fps(); 
+  user_pad.y = min(double(kernel->display.height() - user_pad.height), max(0.00, user_pad.y + fps_ratio * y));
+
+  return last;
+}
+
+RectDouble Pong::comp_move(Kernel* kernel) {
+  RectDouble last = comp_pad;
+
+  double dif = (ball.y - ball.height / 2) - (comp_pad.y - comp_pad.height / 2);
+  double mov = abs(dif) / dif;
+  double fps_ratio = 80.00 / kernel->get_fps(); 
+
+  comp_pad.y = min(double(kernel->display.height() - comp_pad.height), max(0.00, comp_pad.y + fps_ratio * mov));
+
+  return last;
+}
+
+RectDouble Pong::ball_move(Kernel* kernel) {
+  RectDouble last = ball;
+  
+  double fps_ratio = 80.00 / kernel->get_fps(); 
+  
+  //Move forward
+  ball.x += ball_speed * fps_ratio * cos(ball_angle);
+  ball.y += ball_speed * fps_ratio * sin(ball_angle); 
+  ball.x  = min(max(ball.x, 0.00), double(SCREEN_WIDTH  - BALL_DIAMETER));
+  ball.y  = min(max(ball.y, 0.00), double(SCREEN_HEIGHT - BALL_DIAMETER));
+
+  //Bounce off walls
+  if(ball.y == 0) {
+    ball_angle += (ball_angle > pi/2) ? pi/4 : 3*pi/2;
+  } else if (ball.y == SCREEN_HEIGHT - BALL_DIAMETER) {
+    ball_angle += (ball_angle < 3*pi/2) ? -1 * pi/4 : -3*pi/2;
   }
-  if (ball.y < ai.y + 20 && ai.y != 0) {
-    ai.y -= 1;
-  }
-  ai.draw();
-  player.draw();
-  /*
-    display.fillRect(0, ai_y, 5, 20, WHITE);
-    display.fillRect(123, player_y, 5, 20,WHITE);
-  */
-  byte d_w = display.width();
-  //display.fillRect(d_w/2-1,0,2,63,WHITE);
-  display.setCursor(35, 0);
-  print3(ai.score);
-  display.setCursor(75, 0);
-  print3(player.score);
-  display.fillCircle(ball.x, ball.y, ball.r, WHITE);
-  if (!pause) {
-    checkCollision(true);
-    checkCollision(false);
-    if ( (ball.x != 0 && !(ball.x > 200)) && ball.x != display.width() - 1) {
-      if (directionx == 0) {
-        ball.x -= 2;
-      }
-      else {
-        ball.x += 2;
-      }
-    }
-    else {
-      directionx = random(2);
-      if (ball.x == display.width() - 1) {
-        ai.score++;
-      }
-      if (ball.x == 0 || (ball.x > 200)) {
-        player.score ++;
-      }
-
-      ball.x = 63;
-      ball.y = 31;
-      directiony = 1;
-      display.display();
-      display.setTextSize(2);
-      display.clearDisplay();
-      display.setCursor(20, 23);
-      print3(ai.score);
-      display.setCursor(80, 23);
-      print3(player.score);
-      display.display();
-      delay(2500);
-      display.clearDisplay();
-      display.setTextSize(1);
-    }
-    if ((!(ball.y >= 200)) && (ball.y <= 63)) {
-      if (directiony == 0) {
-        ball.y += 2;
-      }
-      if (directiony == 1) {
-
-      }
-      if (directiony == 2) {
-        ball.y -= 2;
-      }
-    }
-    else {
-      if ( ball.y >= 200) {
-        ball.y = 2;
-        directiony = 0;
-      }
-      else {
-        directiony = 2;
-        ball.y -= 1;
-      }
-    }
-  }
-}
-void Pong::checkCollision(bool rect) {
-  byte cx;
-  if (rect)
+  
+  //Check paddles
+  if(not check_collisions()) 
   {
-    cx = ball.x + 4;
-  }
-  else
-  {
-    cx = ball.x - 4;
-  }
-  if (rect == true) {
-    if (player.intersects(ball)) {
-      directionx = 0;
-      directiony = random(3);
+    if(ball.x == 0) {
+      user_score++;
+      reset_ball();
+    } else if (ball.x == SCREEN_WIDTH - BALL_DIAMETER) {
+      comp_score++;
+      reset_ball();
     }
   }
-  else {
-    if (ai.intersects(ball)) {
-      directionx = 1;
-      directiony = random(3);
-    }
-  }
-  /*if( (cx > 0 && cx <= 5) ||  (cx < 127 && cx >=  123) ) {
-  	if((ball.y >= y && ball.y <= y+20) || (ball.y+4 >= y && ball.y+4 <= y+20) || (ball.y-4 >= y && ball.y-4<= y+20)) {
-  		if(rect == true) {
-  			directionx = 0;
-  		}
-  		else {
-  			directionx = 1;
-  		}
-  		directiony = random(3);
-  	}
-    }
-  */
+  
+  return last;
 }
-void Pong::Countdown() {
-  display.setTextSize(3);
-  display.setCursor((display.width() - 15) / 2, (display.height() - 21) / 2);
-  display.clearDisplay();
-  display.print("3");
-  display.display();
-  delay(1000);
-  display.setCursor((display.width() - 15) / 2, (display.height() - 21) / 2);
-  display.clearDisplay();
-  display.print("2");
-  display.display();
-  delay(1000);
-  display.setCursor((display.width() - 15) / 2, (display.height() - 21) / 2);
-  display.clearDisplay();
-  display.print("1");
-  display.display();
-  delay(1000);
-  display.clearDisplay();
-  display.setTextSize(1);
+
+void Pong::reset_ball() {
+  ball.x = (SCREEN_WIDTH  - BALL_DIAMETER) / 2;
+  ball.y = (SCREEN_HEIGHT - BALL_DIAMETER) / 2;
+
+  ball_angle = random(360) * pi / 180;
+}
+
+bool Pong::check_collisions() {
+  if(ball.intersect(user_pad)) {
+    double dif = (ball.y - ball.height / 2) - (user_pad.y - user_pad.height / 2);
+    ball_angle += (ball_angle < pi / 2) ? pi/4 : -3*pi / 2;
+    return true;
+  } else if (ball.intersect(comp_pad)) {
+    ball_angle += (ball_angle > pi) ? pi/4 : -pi/4;
+    return true;
+  } else {
+    return false;
+  }
 }

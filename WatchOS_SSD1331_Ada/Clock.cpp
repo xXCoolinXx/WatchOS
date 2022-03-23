@@ -1,7 +1,7 @@
 #include <EEPROM.h>
 #include <TimeAlarms.h>
-#include "Sleep.h"
-//include the clock.h file where everything is defined to implement it
+//#include "Sleep.h"
+//include the clockzh file where everything is defined to implement it
 #include "Clock.h"
 //Get the easy class to make a rectangle
 #include "Rect.h"
@@ -13,7 +13,7 @@ extern bool lastDown;
 extern bool lastSpecial;
 extern bool currentState;
 extern bool lastToggle;
-extern Sleep sleeper;
+//extern Sleep sleeper;
 const byte PROGMEM flashlight_icon[]
 {
   0x00, 0x00, 0x00,
@@ -653,7 +653,7 @@ void Clock::displayAll() {
       display.setTextColor(BLUE);
       display.drawBitmap(0, 38, clock_icon, 11, 11, WHITE);
       display.setCursor(15,42);
-      display.println( round((analogRead(A2) * (5.0 / 1023.0)-3.6)*100/0.6) );
+     // display.println( round((analogRead(A2) * (5.0 / 1023.0)-3.6)*100/0.6) );
       
       display.setTextColor(WHITE);
     }
@@ -741,7 +741,7 @@ void Clock::displayAll() {
         countdown.Minute = difference       / 60;
         countdown.Hour   = countdown.Minute / 60;
         if (timerOn) {
-          sleeper.resetSleep();
+//          sleeper.resetSleep();
           display.setCursor(display.width() / 2 - (47 / 2), 39);
           print2(countdown.Hour);
           display.setTextColor(WHITE);
@@ -958,7 +958,7 @@ void Clock::stopwatch() {
     //    ltm.Hour = tm.Hour;
   }
   if (sw.Second != 0 || sw.Minute != 0 || sw.Hour != 0) {
-    sleeper.resetSleep();
+//    sleeper.resetSleep();
     display.setTextSize(1);
     display.setCursor(display.width() - 59, 40);
     print2(sw.Hour);
@@ -982,5 +982,4 @@ void Clock::stopwatch() {
   }
 }
 
-Clock clock;
-
+Clock clockz;

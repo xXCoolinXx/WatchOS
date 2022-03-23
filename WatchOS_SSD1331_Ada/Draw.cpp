@@ -5,6 +5,7 @@
  #include "Point.h"
  #include "Line.h"
  #include "Rect.h"
+ #include "Color.h"
  void Point::draw()
  {
 	display.drawPixel(x,y, WHITE);
@@ -15,4 +16,3 @@
  void Rect::draw(uint16_t color) {
 	display.fillRect(x,y,w,h,color);
  }
-

@@ -1,7 +1,7 @@
 #include "Clock.h"
-#include "Sleep.h"
-extern Sleep sleeper;
-extern Clock clock;
+//#include "Sleep.h"
+//extern Sleep sleeper;
+extern Clock clockz;
 extern bool sleep;
 bool lastSpecial = false;
 bool lastUp = false;
@@ -15,13 +15,13 @@ bool lastToggle = false;
 void Events::Left() {
   if (!digitalRead(LEFT) || analogRead(1) < 250) {
     if (currentState) {
-      clock.Left();
+      clockz.Left();
     }
     else {
       Game::cg->Left();
     }
     lastLeft = true;
-    sleeper.resetSleep();
+//    sleeper.resetSleep();
   }
   else {
     lastLeft = false;
@@ -31,13 +31,13 @@ void Events::Left() {
 void Events::Right() {
   if (!digitalRead(RIGHT) || analogRead(1) > 750) {
     if (currentState) {
-      clock.Right();
+      clockz.Right();
     }
     else {
       Game::cg->Right();
     }
     lastRight = true;
-    sleeper.resetSleep();
+//    sleeper.resetSleep();
   }
   else {
     lastRight = false;
@@ -47,13 +47,13 @@ void Events::Right() {
 void Events::Up() {
   if (!digitalRead(UP) || analogRead(0) > 750) {
     if (currentState) {
-      clock.Up();
+      clockz.Up();
     }
     else {
       Game::cg->Up();
     }
     lastUp = true;
-    sleeper.resetSleep();
+//    sleeper.resetSleep();
   }
   else {
     lastUp = false;
@@ -63,13 +63,13 @@ void Events::Up() {
 void Events::Down() {
   if (!digitalRead(DOWN) || analogRead(0) < 250) {
     if (currentState) {
-      clock.Down();
+      clockz.Down();
     }
     else {
       Game::cg->Down();
     }
     lastDown = true;
-    sleeper.resetSleep();
+//    sleeper.resetSleep();
   }
   else {
     lastDown = false;
@@ -82,7 +82,7 @@ void Events::checkSpecial() {
   if (out3 == HIGH) {
 
     if (currentState == HIGH ) {
-      clock.Special();
+      clockz.Special();
     }
     else {
       //      specialhold = LOW;
@@ -90,29 +90,29 @@ void Events::checkSpecial() {
 
       Game::cg->Special();
     }
-    sleeper.resetSleep();
+//    sleeper.resetSleep();
     lastSpecial = true;
   }
   else {
-    clock.Specialholdoff();
+    clockz.Specialholdoff();
     //Game::cg->Specialholdoff();
     lastSpecial = false;
   }
 }
 
 
-#include <avr/wdt.h>
+//#include <avr/wdt.h>
 
-void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
+//void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
 // Function Implementation
-void wdt_init(void)
-{
-    MCUSR = 0;
-    wdt_disable();
-
-    return;
-}
-
+//void wdt_init(void)
+//{
+//    MCUSR = 0;
+//    wdt_disable();
+//
+//    return;
+//}
+/*
 #define softRestart()        \
 do                          \
 {                           \
@@ -120,14 +120,14 @@ do                          \
     for(;;)                 \
     {                       \
     }                       \
-} while(0)
+} while(0)*/
 
 
 void Events::checkToggle() {
   bool out9 = !digitalRead(TOGGLE);
   if (out9 == HIGH && !sleep) {
     if (currentState == 1) {
-      clock.Toggle();
+      clockz.Toggle();
     }
     if (currentState == 0) {
       display.fillScreen(BLACK);
@@ -137,7 +137,7 @@ void Events::checkToggle() {
       digitalWrite(12, LOW);
     }
     
-    sleeper.resetSleep();
+//    sleeper.resetSleep();
     lastToggle = true;
   }
   else if(sleep) {
@@ -154,7 +154,7 @@ void Events::checkEvents() {
   checkToggle();
 
   //get RTC time and set to rtc_time
-  clock.Read();
+  clockz.Read();
 
   checkSpecial();
   Up();
@@ -162,7 +162,7 @@ void Events::checkEvents() {
   Left();
   Right();
 
-  clock.Write();
+  clockz.Write();
 }
 
 Events::Events() {

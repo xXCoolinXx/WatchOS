@@ -24,9 +24,7 @@ class Events {
 
 	public:
 	Events();
-  //current state (ie clock = 1 and games = 0)
+  //current state (ie clockz= 1 and games = 0)
 	//Ties all the private functions together
 	void checkEvents();
 };
-
-

@@ -1,3 +1,4 @@
+#pragma once
 #include "Game.h"
 
 class Maze : public Game {
@@ -9,5 +10,3 @@ class Maze : public Game {
   void Special();
   void displayAll();
 };
-
-

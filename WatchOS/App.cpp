@@ -1,9 +1,11 @@
-//Include definition of functions to implement them
 #include "App.h"
-//App constructor (empty)
-App::App() {
-	
+#include "Kernel.h"
+
+//Define the constructor
+App::App(Kernel* kernel) {
+  
+};
+
+String App::get_name() {
+  return String("App");
 }
-
-
-

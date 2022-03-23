@@ -1,3 +1,4 @@
+#pragma once
 #include "Game.h"
 
 class Flashlight : public Game {
@@ -11,4 +12,3 @@ class Flashlight : public Game {
   Flashlight();
   bool displayDim = false;
 };
-

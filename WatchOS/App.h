@@ -1,20 +1,15 @@
 #pragma once
-//get the display for drawing
-#include <Adafruit_SSD1306.h>
-extern Adafruit_SSD1306 display;
-//predefinition of class Events
-class Events;
-//basic framework for displaying and using the buttons
+#include "Color.h"
+#include <Arduino.h>
+//#include "Kernel.h"
+
+class Kernel;
+
+//Common framework for apps so that Kernel can call them easily
+//More akin to a Rust traits than a real class
 class App {
-	public:
-	App();
-	virtual void Up()=0;
-	virtual void Down()=0;
-	virtual void Left()=0;
-	virtual void Right()=0;
-	virtual void Special()=0;
-	virtual void Specialholdoff()=0;
-	virtual void displayAll()=0;
+  public:
+  App(Kernel* kernel);
+  virtual void run_code(double x, double y, bool special, Kernel* kernel)=0;
+  virtual String get_name();
 };
-
-

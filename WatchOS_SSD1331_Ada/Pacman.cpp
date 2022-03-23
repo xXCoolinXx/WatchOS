@@ -4,6 +4,7 @@
  * Created: 4/30/2017 4:12:13 PM
  *  Author: A cool dude
  */ 
+#pragma once
  #include "Pacman.h"
  extern void print3(byte);
 const byte aghost[]  PROGMEM  = {
@@ -178,4 +179,3 @@ display.fillRect(55,26,16,3,WHITE);
 	}
 	
 }
-
