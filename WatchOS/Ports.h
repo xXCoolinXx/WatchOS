@@ -18,8 +18,8 @@ const int ANALOG = A0;
 const int boggle = 2;
 
 //WiFi
-const String ssid     = "NETGEAR64";
-const String password = "shinyviolet824";
+const String ssid     = 
+const String password = 
 
 //Speaker
 const int Speaker = 12;
