@@ -5,6 +5,7 @@
 #include "Clock.h"
 #include "Images.h"
 #include "Pong.h"
+#include "Snake.h"
 #include <cmath>
 
 //smaller windows like cursor
@@ -53,6 +54,8 @@ void Start::checkPress(bool special, Kernel* kernel) {
     } else {
       if(app_rects[0].contains(Cursor.toPointInt())) {
         kernel->set_app(new Pong(kernel)); 
+      } else if(app_rects[1].contains(Cursor.toPointInt())) {
+        kernel->set_app(new Snake(kernel));
       }
     }
   }
@@ -99,7 +102,10 @@ void Start::displayApps(Kernel* kernel) {
   for(int i = 0; i < ROWS*COLS; i++) {
     kernel->display.drawRoundRect(app_rects[i].x - 1, app_rects[i].y - 1, OUTLINE_DIM, OUTLINE_DIM, 1, WHITE);
   }
-
+  
   //Pong
-  kernel->display.drawRGBBitmap(APP_SPACING_X * (0 + 1) + OUTLINE_DIM * 0 + 1, APP_START + APP_SPACING_Y * (0 + 1) + OUTLINE_DIM*0 + 1, pong18, APP_DIM, APP_DIM); 
+  kernel->display.drawRGBBitmap(app_rects[0].x, app_rects[0].y, pong18, APP_DIM, APP_DIM); 
+
+  //Snake
+  kernel->display.drawRGBBitmap(app_rects[1].x, app_rects[1].y, snake18, APP_DIM, APP_DIM);
 }

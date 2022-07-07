@@ -1,7 +1,6 @@
 #include "Clock.h"
 #include "Kernel.h"
 #include "Images.h"
-#include "Print.h"
 #include "ClockDaemon.h"
 #include <TimeLib.h>
 
@@ -69,10 +68,8 @@ AlarmEdit operator++(AlarmEdit& s) {
 }
 
 AlarmEdit operator--(AlarmEdit& s) {
-  short new_s;
-  if (new_s == 1) new_s = 11;
-  else new_s = static_cast<short>(s) - 1;
-
+  short new_s = static_cast<short>(s) - 1;
+  if (new_s == 0) { new_s = 11; }
   s = static_cast<AlarmEdit>(new_s);
   return s;
 }
@@ -199,7 +196,7 @@ void Clock::update_selection(double x, double y, Kernel* kernel) {
           kernel->_clock->timerSecond(dir);
           break;
       }
-      _clearChars(edit, current_selection, 2, kernel);
+      clear_chars(edit, current_selection, 2, &kernel->display);
       just_moved_y = true;
     } else if (abs(y) < 0.2) {
       just_moved_y = false;
@@ -230,7 +227,7 @@ void Clock::update_selection(double x, double y, Kernel* kernel) {
           break;
         case SET:
           a->Set = !a->Set;
-          _clearChars(getX(SET), getY(SET), getWidth(SET), kernel);
+          clear_chars(getX(SET), getY(SET), getWidth(SET), &kernel->display);
           break;
         case HOUR_:
           if (a->Hour == 0 and dir == -1) {
@@ -239,7 +236,7 @@ void Clock::update_selection(double x, double y, Kernel* kernel) {
             a->Hour += dir;
             a->Hour %= 24;
           }
-          _clearChars(getX(HOUR_), getY(HOUR_), getWidth(HOUR_), kernel);
+          clear_chars(getX(HOUR_), getY(HOUR_), getWidth(HOUR_), &kernel->display);
           break;
         case MINUTE_:
           if (a->Minute == 0 and dir == -1) {
@@ -248,7 +245,7 @@ void Clock::update_selection(double x, double y, Kernel* kernel) {
             a->Minute += dir;
             a->Minute %= 60;
           }
-          _clearChars(getX(MINUTE_), getY(MINUTE_), getWidth(MINUTE_), kernel);
+          clear_chars(getX(MINUTE_), getY(MINUTE_), getWidth(MINUTE_), &kernel->display);
           break;
         default:
           int wday = static_cast<int>(alarm_edit) - 4;
@@ -281,10 +278,6 @@ void Clock::_clearStopwatchArea(Kernel* kernel) {
 
 void Clock::_clearTimerArea(Kernel* kernel) {
   kernel->display.fillRect(40, Selection::TIMER, kernel->display.width(), 9, BLACK);
-}
-
-void Clock::_clearChars(short x, short y, short num_chars, Kernel* kernel) {
-  kernel->display.fillRect(x, y, num_chars * CHAR_SPACE_W, CHAR_HEIGHT, BLACK);
 }
 
 void Clock::_clearAlarmArea(Kernel* kernel) {

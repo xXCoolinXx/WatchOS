@@ -1,11 +1,9 @@
 #pragma once
 #include "App.h"
+#include "Print.h"
 
 #define ROW_SPACE 10
 #define NUM_ROWS 3
-#define CHAR_WIDTH 5
-#define CHAR_SPACE_W 6
-#define CHAR_HEIGHT 7
 #define X_SPACE 10
 
 class Kernel;
@@ -50,7 +48,6 @@ class Clock : public App {
 
   void _clearStopwatchArea(Kernel* kernel);
   void _clearTimerArea(Kernel* kernel);
-  void _clearChars(short x, short y, short num_chars, Kernel* kernel);
   void _underline(short x, short y, short num_chars, Kernel* kernel, bool clear = true);
   void _clearAlarmArea(Kernel* kernel);
   //void _drawDOW(

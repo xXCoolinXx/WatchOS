@@ -53,8 +53,14 @@ struct RectDouble {
     return (x <= p.x and p.x <= (x+width)) and (y <= p.y and p.y <= (y + height));
   }
 
-  bool intersect(const RectDouble r) const {
-    return (contains(PointDouble{r.x, r.y}) or contains(PointDouble{r.x + r.width, r.y}) or contains(PointDouble{r.x, r.y + height}) or contains(PointDouble{r.x + width, r.y + height}));
+  bool intersect(const RectDouble r) const { 
+    //Code adapted from the SFML graphics library
+    const double interLeft   = max(x, r.x);
+    const double interTop    = max(y, r.y);
+    const double interRight  = min(x + width, r.x + r.width);
+    const double interBottom = min(y + height, r.y + r.height);
+
+    return (interLeft < interRight) && (interTop < interBottom); 
   }
 };
 

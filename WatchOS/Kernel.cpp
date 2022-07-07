@@ -7,7 +7,7 @@
 #include "Images.h"
 #include <numeric>
 
-#define DEBUG
+//#define DEBUG
 const int frame_count = 10;
 
 Kernel::Kernel() : display(Adafruit_SSD1331(&SPI, cs, dc, rst)) {
